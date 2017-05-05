@@ -1,4 +1,4 @@
-package client
+package asyncinflux
 
 import (
 	"github.com/influxdata/influxdb/client/v2"
