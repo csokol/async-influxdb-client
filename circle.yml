@@ -1,0 +1,12 @@
+machine:
+  services:
+    - docker
+  environment:
+    TAG: $CIRCLE_BRANCH-$CIRCLE_SHA1
+    DOCKER_IMAGE: applift/idsp_tracker:$CIRCLE_BRANCH-$CIRCLE_SHA1
+    TEST_DB: circle_test
+
+database:
+  pre:
+    - docker run --name influx -d -p 8086:8086 influxdb:1.1-alpine
+    - docker run -it --link influx:influx influxdb:1.1-alpine influx --host influx -execute 'create database test_database'
