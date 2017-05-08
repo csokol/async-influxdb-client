@@ -5,6 +5,7 @@ import (
 	"time"
 	"errors"
 	"log"
+	"os"
 )
 
 type MetricDatum struct {
@@ -100,7 +101,17 @@ func NewAsyncClient(config *AsyncClientConfig) (*AsyncClient, error) {
 	return asyncClient, nil
 }
 
-func DefaultClient(influxEndpoint string, influxDb string) (*AsyncClient, error) {
+func DefaultClient() (*AsyncClient, error) {
+	influxEndpoint := os.Getenv("INFLUXDB_ENDPOINT")
+	if influxEndpoint == "" {
+		return nil, errors.New("Missing influxDB http endpoint (INFLUXDB_ENDPOINT)")
+	}
+
+	influxDb := os.Getenv("INFLUXDB_DATABASE")
+	if influxDb == "" {
+		return nil, errors.New("Missing influxDB database name (INFLUXDB_DATABASE)")
+	}
+
 	return NewAsyncClient(&AsyncClientConfig {
 		Endpoint: influxEndpoint,
 		Database: influxDb,
