@@ -99,3 +99,12 @@ func NewAsyncClient(config *AsyncClientConfig) (*AsyncClient, error) {
 	go asyncClient.batchFlusher(asyncClient.pointsChannel, time.NewTicker(config.FlushTimeout))
 	return asyncClient, nil
 }
+
+func DefaultClient(influxEndpoint string, influxDb string) (*AsyncClient, error) {
+	return NewAsyncClient(&AsyncClientConfig {
+		Endpoint: influxEndpoint,
+		Database: influxDb,
+		BatchSize: 100,
+		FlushTimeout: 500 * time.Millisecond,
+	})
+}
